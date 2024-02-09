@@ -31,6 +31,9 @@ streamlit run <script_name>.py
 Replace <script_name>.py with the actual name of the Python script.
 
 **Start the application:** After running the command, Streamlit will start the application and provide a local URL to access it.
+
 **Enter the YouTube video URL:** On the application's interface, input the URL of the YouTube video you wish to translate.
+
 **Process the video:** Click the "Process Video" button to start the translation process. The application will display progress updates as it processes the video.
+
 **Download translated files:** Once processing is complete, a download button will appear, allowing you to download a zip file containing the translated video and all intermediate files. 

@@ -35,10 +35,8 @@ git clone https://github.com/blazingphoenix7/YouTube-Video-Translation.git
 python3 -m venv env
 env\Scripts\activate  #On Mac, use source env/bin/activate
 ```
-3. Install Dependencies:
-```bash
-pip install -r requirements.txt
-```
+3. Install the necessary dependencies.
+  
 4. Run the Streamlit Application:
 ```bash
 streamlit run app.py

@@ -3,7 +3,7 @@
 Welcome to the YouTube Video Translator project! This Python application utilizes Streamlit for a user-friendly web interface, automating the translation of YouTube videos into French. The project streamlines and automates the process of downloading videos, extracting audio, transcribing the audio to text, translating the text, converting the translated text back into speech, and merging this new audio with the original video.
 
 ## Project Purpose
-The YouTube Video Translator aims to enhance accessibility, support educational content in multiple languages, and aid in content localization. By automating the translation process, this project opens up a world of content for French-speaking audiences, making information and education more accessible. Also this was a part of my final project CSGY-6613: Introduction to Artificial Intelligence under Prof. Pantelis Monogioudis at NYU Tandon.
+The YouTube Video Translator aims to enhance accessibility, support educational content in multiple languages, and aid in content localization. By automating the translation process, this project opens up a world of content for French-speaking audiences, making information and education more accessible. Also this was a part of my final project in CSGY-6613: Introduction to Artificial Intelligence under Prof. Pantelis Monogioudis at NYU.
 
 ## Core Functionality
 

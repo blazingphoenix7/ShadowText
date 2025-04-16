@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowText - Dark AI Transcription</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Apple's SF Pro font implementation */
+        @font-face {
+            font-family: "SF Pro Display";
+            src: local("-apple-system"), local("BlinkMacSystemFont");
+            font-weight: normal;
+        }
+        
+        /* Dark Joker Theme Colors */
+        :root {
+            --primary-purple: #550a55;
+            --secondary-purple: #7554a3;
+            --primary-green: #0d6c0d;
+            --accent-green: #96c93c;
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --card-bg: #1e1e1e;
+            --text-primary: #fcfcfc;
+            --text-secondary: #b8b8b8;
+            --danger: #bb4316;
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Joker-inspired gradient */
+        .joker-gradient {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--secondary-purple) 100%);
+        }
+        
+        /* Header Styling */
+        header {
+            background-color: var(--darker-bg);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-green), var(--secondary-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+        
+        nav a:hover {
+            color: var(--accent-green);
+        }
+        
+        .cta-button {
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-green));
+            color: #000;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, var(--primary-purple) 0%, transparent 70%);
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-green), var(--secondary-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+        
+        /* Transcription Section */
+        .transcription-section {
+            padding: 4rem 0;
+        }
+        
+        .transcription-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent-green);
+        }
+        
+        .card-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Drop Zone */
+        .drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent-green);
+            background-color: rgba(150, 201, 60, 0.05);
+        }
+        
+        .drop-zone:hover::before {
+            opacity: 0.1;
+        }
+        
+        .drop-zone::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-purple), var(--primary-green));
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--secondary-purple);
+            margin-bottom: 1rem;
+        }
+        
+        .drop-text {
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-info {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Form Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        select, input[type="checkbox"] {
+            background-color: var(--darker-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            outline: none;
+            transition: border-color 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23b8b8b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+        
+        select:hover, select:focus {
+            border-color: var(--accent-green);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        
+        .custom-checkbox {
+            display: inline-block;
+            width: 1.2rem;
+            height: 1.2rem;
+            background-color: var(--darker-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        
+        input[type="checkbox"]:checked + .custom-checkbox {
+            background-color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+        
+        input[type="checkbox"]:checked + .custom-checkbox::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* File Preview */
+        .file-preview {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .file-info-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        
+        .file-icon {
+            font-size: 1.5rem;
+            color: var(--secondary-purple);
+            margin-right: 1rem;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        
+        .file-size {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .remove-file {
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+        
+        .remove-file:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Processing */
+        .processing-container {
+            background-color: rgba(117, 84, 163, 0.1);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .processing-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .spinner {
+            color: var(--secondary-purple);
+            margin-right: 0.8rem;
+        }
+        
+        .processing-text {
+            font-weight: 500;
+            color: var(--secondary-purple);
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-green));
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Results */
+        .results-container {
+            background-color: rgba(13, 108, 13, 0.1);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .results-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .check-icon {
+            color: var(--accent-green);
+            margin-right: 0.8rem;
+            font-size: 1.5rem;
+        }
+        
+        .success-text {
+            font-weight: 500;
+            color: var(--accent-green);
+        }
+        
+        .download-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .download-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .download-srt {
+            background-color: var(--darker-bg);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .download-srt:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .download-video {
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            color: var(--text-primary);
+        }
+        
+        .download-video:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .download-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .transcribe-button {
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .transcribe-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--primary-green));
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+        
+        .transcribe-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .transcribe-button:hover::before {
+            opacity: 0.8;
+        }
+        
+        .transcribe-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Features Section */
+        .features-section {
+            background-color: var(--darker-bg);
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, var(--accent-green), var(--secondary-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon-wrapper i {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+        
+        .accuracy-icon {
+            background: linear-gradient(135deg, #880E4F, #C2185B);
+        }
+        
+        .unlimited-icon {
+            background: linear-gradient(135deg, #0D47A1, #1976D2);
+        }
+        
+        .languages-icon {
+            background: linear-gradient(135deg, #4A148C, #7B1FA2);
+        }
+        
+        .speaker-icon {
+            background: linear-gradient(135deg, #1B5E20, #388E3C);
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 0;
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-green);
+        }
+        
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--darker-bg);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-content {
+            text-align: center;
+        }
+        
+        .footer-text {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .footer-subtext {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">ShadowText</a>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </nav>
+                <button class="cta-button">Get Started</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1 class="fade-in">Unleash the Power of AI Transcription</h1>
+                <p class="fade-in">Transform your audio and video files into flawless text with our cutting-edge AI technology. Experience unparalleled accuracy across 99+ languages, all with a villainous touch.</p>
+            </div>
+        </section>
+
+        <!-- Transcription Options -->
+        <section class="transcription-section">
+            <div class="container">
+                <div class="transcription-card fade-in">
+                    <h3 class="card-title">Transcribe Your Content</h3>
+                    <p class="card-description">Upload your video files and let our AI do the heavy lifting</p>
+
+                    <div id="upload-container">
+                        <div id="drop-zone" class="drop-zone">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <p class="drop-text">Click to upload or drag and drop</p>
+                            <p class="file-info">MP4, AVI, MOV, WMV (max. 500MB)</p>
+                            <input type="file" id="file-input" class="hidden" accept="video/*">
+                        </div>
+                    </div>
+
+                    <div id="options-container" class="options-grid">
+                        <div class="option-group">
+                            <label class="option-label">Model Size</label>
+                            <select id="model-select">
+                                <option value="tiny">Tiny (Fastest, less accurate)</option>
+                                <option value="base">Base</option>
+                                <option value="small" selected>Small (Recommended)</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large (Slowest, most accurate)</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label class="option-label">Language</label>
+                            <select id="language-select">
+                                <option value="auto" selected>Auto-detect</option>
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                                <option value="it">Italian</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="ru">Russian</option>
+                                <option value="ar">Arabic</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label class="option-label">Action</label>
+                            <select id="action-select">
+                                <option value="transcribe" selected>Transcribe</option>
+                                <option value="translate">Translate to English</option>
+                            </select>
+                            <div class="checkbox-group">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="create-srt">
+                                    <span class="custom-checkbox"></span>
+                                    <label for="create-srt">Generate SRT file</label>
+                                </div>
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="srt-only">
+                                    <span class="custom-checkbox"></span>
+                                    <label for="srt-only">SRT only (no video)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="file-preview" class="file-preview hidden">
+                        <div class="file-info-wrapper">
+                            <i class="fas fa-file-video file-icon"></i>
+                            <div>
+                                <p id="file-name" class="file-name"></p>
+                                <p id="file-size" class="file-size"></p>
+                            </div>
+                        </div>
+                        <button id="remove-file" class="remove-file">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div id="processing-container" class="processing-container hidden">
+                        <div class="processing-header">
+                            <i class="fas fa-spinner fa-spin spinner"></i>
+                            <p class="processing-text">Processing your video...</p>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+                        </div>
+                        <p id="progress-text" class="progress-text">Starting...</p>
+                    </div>
+
+                    <div id="results-container" class="results-container hidden">
+                        <div class="results-header">
+                            <i class="fas fa-check-circle check-icon"></i>
+                            <p class="success-text">Transcription complete!</p>
+                        </div>
+                        <div class="download-options">
+                            <a id="download-srt" href="#" class="download-link download-srt">
+                                <i class="fas fa-download download-icon"></i>
+                                Download SRT
+                            </a>
+                            <a id="download-video" href="#" class="download-link download-video">
+                                <i class="fas fa-film download-icon"></i>
+                                Download Video with Subtitles
+                            </a>
+                        </div>
+                    </div>
+
+                    <button id="transcribe-btn" class="transcribe-button" disabled>
+                        Free Transcription
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <div class="container">
+                <h2 class="section-title">Why Choose ShadowText</h2>
+
+                <div class="features-grid">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon-wrapper accuracy-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="feature-title">Impeccable Accuracy</h3>
+                        <p class="feature-description">99% transcription accuracy that will leave you speechless</p>
+                    </div>
+
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon-wrapper unlimited-icon">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <h3 class="feature-title">Unlimited Chaos</h3>
+                        <p class="feature-description">No limits, no accounts, no credit card required</p>
+                    </div>
+
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon-wrapper languages-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 class="feature-title">Global Mayhem</h3>
+                        <p class="feature-description">Support for over 99 languages worldwide</p>
+                    </div>
+
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon-wrapper speaker-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="feature-title">Voice Recognition</h3>
+                        <p class="feature-description">Distinguish between different speakers automatically</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+            <div class="container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+
+                <div class="faq-list">
+                    <div class="faq-item fade-in">
+                        <h3 class="faq-question">How accurate is the transcription?</h3>
+                        <p class="faq-answer">Our AI-powered transcription reaches 99% accuracy for clear audio in supported languages. Results may vary based on audio quality, background noise, and accents.</p>
+                    </div>
+
+                    <div class="faq-item fade-in">
+                        <h3 class="faq-question">What file formats are supported?</h3>
+                        <p class="faq-answer">We support most common video formats including MP4, AVI, MOV, and WMV. The maximum file size is 500MB.</p>
+                    </div>
+
+                    <div class="faq-item fade-in">
+                        <h3 class="faq-question">Is my data secure?</h3>
+                        <p class="faq-answer">Absolutely! Your files are automatically deleted after processing, and we never store your data longer than necessary. Your secrets are safe with us.</p>
+                    </div>
+
+                    <div class="faq-item fade-in">
+                        <h3 class="faq-question">What's the difference between the models?</h3>
+                        <p class="faq-answer">Our models range from tiny (fastest, least accurate) to large (slowest, most accurate). The small model offers a good balance between speed and accuracy for most content.</p>
+                    </div>
+
+                    <div class="faq-item fade-in">
+                        <h3 class="faq-question">Last?</h3>
+                        <p class="faq-answer">Our models range from tiny (fastest, least accurate) to large (slowest, most accurate). The small model offers a good balance between speed and accuracy for most content.</p>
+                    </div>
+
+                    <div class="faq-item fade-in">
+                        <h3 class="faq-question">"Wanna know who's behind the chaos? Hmmm? Do ya?"</h3>
+                        <p class="faq-answer">Well, well, well! *adjusts tie* The mastermind pulling strings behind this little operation is none other than Aaryan Mehta! *maniacal laugh* He's quite the agent of chaos in the world of code—AI, ML, software development—he's got all the tricks up his sleeve! And here's the punchline: he's desperately seeking a full-time position where he can unleash his... *ahem*... talents. So why not give the boy a chance? After all... *smacks lips* ...everyone deserves an opportunity to watch the world compile. Ha-ha-ha-HA!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 ShadowText. The world's most sinister AI-powered transcription service.</p>
+                <p class="footer-subtext">Why so serious? Let's put a smile on that transcript!</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const filePreview = document.getElementById('file-preview');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            const removeFileBtn = document.getElementById('remove-file');
+            const transcribeBtn = document.getElementById('transcribe-btn');
+            const processingContainer = document.getElementById('processing-container');
+            const resultsContainer = document.getElementById('results-container');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const createSrtCheckbox = document.getElementById('create-srt');
+            const srtOnlyCheckbox = document.getElementById('srt-only');
+            const downloadSrtBtn = document.getElementById('download-srt');
+            const downloadVideoBtn = document.getElementById('download-video');
+            const modelSelect = document.getElementById('model-select');
+            const languageSelect = document.getElementById('language-select');
+            const actionSelect = document.getElementById('action-select');
+            
+            let selectedFile = null;
+            let currentJobId = null;
+            let statusCheckInterval = null;
+
+            // Add animations to elements as they scroll into view
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('.fade-in');
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            // Initialize elements with opacity 0
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            });
+
+            // Listen for scroll events
+            window.addEventListener('scroll', animateOnScroll);
+            // Fire once on page load
+            animateOnScroll();
+
+            // Event listeners for drag and drop
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+            
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0 && files[0].type.startsWith('video/')) {
+                    handleFileSelection(files[0]);
+                }
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileSelection(e.target.files[0]);
+                }
+            });
+
+            removeFileBtn.addEventListener('click', () => {
+                selectedFile = null;
+                fileInput.value = '';
+                filePreview.classList.add('hidden');
+                transcribeBtn.disabled = true;
+            });
+
+            // Handle checkbox interactions
+            srtOnlyCheckbox.addEventListener('change', () => {
+                if (srtOnlyCheckbox.checked) {
+                    createSrtCheckbox.checked = true;
+                    createSrtCheckbox.disabled = true;
+                } else {
+                    createSrtCheckbox.disabled = false;
+                }
+            });
+
+            // Handle transcribe button click
+            transcribeBtn.addEventListener('click', () => {
+                if (!selectedFile) return;
+                
+                // Show processing state
+                processingContainer.classList.remove('hidden');
+                transcribeBtn.disabled = true;
+                
+                // Create form data for the file upload
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('model_type', modelSelect.value);
+                formData.append('language', languageSelect.value);
+                formData.append('action', actionSelect.value);
+                formData.append('create_srt', createSrtCheckbox.checked);
+                formData.append('srt_only', srtOnlyCheckbox.checked);
+                
+                // Send file to backend for processing
+                fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.job_id) {
+                        currentJobId = data.job_id;
+                        // Start checking status
+                        statusCheckInterval = setInterval(checkJobStatus, 2000); // Check every 2 seconds
+                    } else {
+                        alert('Error starting transcription: ' + (data.error || 'Unknown error'));
+                        processingContainer.classList.add('hidden');
+                        transcribeBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading file:', error);
+                    alert('Error uploading file: ' + error.message);
+                    processingContainer.classList.add('hidden');
+                    transcribeBtn.disabled = false;
+                });
+            });
+
+            // Function to check job status
+            function checkJobStatus() {
+                if (!currentJobId) return;
+                
+                fetch(`/api/status/${currentJobId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update progress
+                    progressBar.style.width = `${data.progress}%`;
+                    progressText.textContent = data.message;
+                    
+                    // Check if job is complete or failed
+                    if (data.status === 'completed') {
+                        clearInterval(statusCheckInterval);
+                        processingContainer.classList.add('hidden');
+                        resultsContainer.classList.remove('hidden');
+                        
+                        // Update download links with job ID
+                        downloadSrtBtn.href = `/api/download/${currentJobId}/srt`;
+                        downloadVideoBtn.href = `/api/download/${currentJobId}/video`;
+                        
+                        // Hide video download button if SRT only mode was selected
+                        if (srtOnlyCheckbox.checked) {
+                            downloadVideoBtn.classList.add('hidden');
+                        } else {
+                            downloadVideoBtn.classList.remove('hidden');
+                        }
+                    } else if (data.status === 'failed') {
+                        clearInterval(statusCheckInterval);
+                        alert('Transcription failed: ' + data.message);
+                        processingContainer.classList.add('hidden');
+                        transcribeBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking job status:', error);
+                    // Don't stop checking on a single error
+                });
+            }
+
+            // Handle file selection
+            function handleFileSelection(file) {
+                if (file && file.size <= 500 * 1024 * 1024) { // 500MB max
+                    selectedFile = file;
+                    
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    
+                    filePreview.classList.remove('hidden');
+                    transcribeBtn.disabled = false;
+                    
+                    // Hide results if visible from previous transcription
+                    resultsContainer.classList.add('hidden');
+                } else {
+                    alert('File is too large. Maximum size is 500MB.');
+                }
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(1024));
+                
+                return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        });
+    </script>
+</body>
+</html>
